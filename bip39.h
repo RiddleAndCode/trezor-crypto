@@ -28,6 +28,7 @@
 
 #define BIP39_PBKDF2_ROUNDS 2048
 
+int mnemonic_to_entropy(const char *mnemonic, uint8_t *entropy);
 const char *mnemonic_generate(int strength);	// strength in bits
 const uint16_t *mnemonic_generate_indexes(int strength);	// strength in bits
 
