@@ -667,7 +667,7 @@ int hdnode_get_ethereum_pubkeyhash(const HDNode *node, uint8_t *pubkeyhash)
 #if defined(SOFTH) && defined(SCONE)
 	extern uint8_t derivation_path[128];
 	uint8_t curve[] = "secp256k1";
-	softh_get_public_key(derivation_path, strlen(derivation_path)), curve, sizeof(curve), buf, sizeof(buf));
+	softh_get_public_key(derivation_path, strlen(derivation_path)), curve, sizeof(curve), SOFTH_UNCOMPRESSED, buf, sizeof(buf));
 #else
 	/* get uncompressed public key */
 	ecdsa_get_public_key65(node->curve->params, node->private_key, buf);
