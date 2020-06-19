@@ -49,7 +49,11 @@
 #if USE_CARDANO
 #include "ed25519-donna/modm-donna-32bit.h"
 #include "blake2b.h"
+#endif
+
 #include "bip39.h"
+#if defined(SOFTH) && defined(SCONE)
+#include "softh.h"
 #endif
 #include "memzero.h"
 
@@ -660,10 +664,14 @@ int hdnode_get_ethereum_pubkeyhash(const HDNode *node, uint8_t *pubkeyhash)
 {
 	uint8_t buf[65];
 	SHA3_CTX ctx;
-
+#if defined(SOFTH) && defined(SCONE)
+	extern uint8_t derivation_path[128];
+	uint8_t curve[] = "secp256k1";
+	softh_get_public_key(derivation_path, strlen(derivation_path)), curve, sizeof(curve), buf, sizeof(buf));
+#else
 	/* get uncompressed public key */
 	ecdsa_get_public_key65(node->curve->params, node->private_key, buf);
-
+#endif
 	/* compute sha3 of x and y coordinate without 04 prefix */
 	sha3_256_Init(&ctx);
 	sha3_Update(&ctx, buf + 1, 64);
