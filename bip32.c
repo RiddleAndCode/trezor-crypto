@@ -54,7 +54,6 @@
 #include "bip39.h"
 #if defined(SOFTH) && defined(SCONE)
 #include "softh.h"
-uint8_t derivation_path[128] = {0};
 #endif
 #include "memzero.h"
 
@@ -649,15 +648,15 @@ void hdnode_get_address(HDNode *node, uint32_t version, char *addr,
 void hdnode_fill_public_key(HDNode *node) {
 
 #if defined(SOFTH) && defined(SCONE)
-  const uint8_t *curve = NULL;
   if (node->curve->params) {
-    curve = "secp256k1";
+    softh_get_public_key(derivation_path, strlen(derivation_path),
+                         SOFTH_SECP256K1, strlen(SOFTH_SECP256K1),
+                         SOFTH_COMPRESSED, node->public_key, 33);
   } else {
-    curve = "ed25519";
+    softh_get_public_key(derivation_path, strlen(derivation_path),
+                         SOFTH_ED25519, strlen(SOFTH_ED25519),
+                         SOFTH_COMPRESSED, node->public_key, 33);
   }
-
-  softh_get_public_key(derivation_path, strlen(derivation_path), curve,
-                       strlen(curve), SOFTH_COMPRESSED, node->public_key, 33);
   return;
 #endif
 
@@ -699,8 +698,11 @@ int hdnode_get_ethereum_pubkeyhash(const HDNode *node, uint8_t *pubkeyhash) {
   uint8_t buf[65];
   SHA3_CTX ctx;
 #if defined(SOFTH) && defined(SCONE)
-  uint8_t curve[] = "secp256k1";
-        softh_get_public_key(derivation_path, strlen(derivation_path)), curve, sizeof(curve), SOFTH_UNCOMPRESSED, buf, sizeof(buf));
+  if (SOFTH_OK == softh_get_public_key(derivation_path, strlen(derivation_path),
+                                       SOFTH_SECP256K1, strlen(SOFTH_SECP256K1), SOFTH_UNCOMPRESSED,
+                                       buf, sizeof(buf)))
+    return 1;
+  return 0;
 #else
   /* get uncompressed public key */
   ecdsa_get_public_key65(node->curve->params, node->private_key, buf);

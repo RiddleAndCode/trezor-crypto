@@ -39,6 +39,10 @@
 #include "rfc6979.h"
 #include "memzero.h"
 
+#if defined(SOFTH) && defined(SCONE)
+#include "softh.h"
+#endif
+
 // Set cp2 = cp1
 void point_copy(const curve_point *cp1, curve_point *cp2)
 {
@@ -731,13 +735,24 @@ int ecdsa_sign(const ecdsa_curve *curve, HasherType hasher_sign, const uint8_t *
 // digest is 32 bytes of digest
 // is_canonical is an optional function that checks if the signature
 // conforms to additional coin-specific rules.
-int ecdsa_sign_digest(const ecdsa_curve *curve, const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby, int (*is_canonical)(uint8_t by, uint8_t sig[64]))
-{
-	int i;
-	curve_point R;
-	bignum256 k, z, randk;
-	bignum256 *s = &R.y;
-	uint8_t by; // signature recovery byte
+int ecdsa_sign_digest(const ecdsa_curve *curve, const uint8_t *priv_key,
+                      const uint8_t *digest, uint8_t *sig, uint8_t *pby,
+                      int (*is_canonical)(uint8_t by, uint8_t sig[64])) {
+
+#if defined(SOFTH) && defined(SCONE)
+  if (SOFTH_OK == softh_sign(digest, 32, derivation_path,
+                             strlen(derivation_path), SOFTH_SECP256K1,
+                             strlen(SOFTH_SECP256K1), sig, 64))
+    return 0;
+  return -1;
+
+#endif
+
+      int i;
+  curve_point R;
+  bignum256 k, z, randk;
+  bignum256 *s = &R.y;
+  uint8_t by; // signature recovery byte
 
 #if USE_RFC6979
 	rfc6979_state rng;
