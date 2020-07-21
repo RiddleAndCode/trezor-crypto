@@ -649,11 +649,11 @@ void hdnode_fill_public_key(HDNode *node) {
 
 #if defined(SOFTH) && defined(SCONE)
   if (node->curve->params) {
-    softh_get_public_key(derivation_path, strlen(derivation_path),
+  softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen(derivation_path),
                          SOFTH_SECP256K1, strlen(SOFTH_SECP256K1),
                          SOFTH_COMPRESSED, node->public_key, 33);
   } else {
-    softh_get_public_key(derivation_path, strlen(derivation_path),
+  softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen(derivation_path),
                          SOFTH_ED25519, strlen(SOFTH_ED25519),
                          SOFTH_COMPRESSED, node->public_key, 33);
   }
