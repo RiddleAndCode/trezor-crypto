@@ -105,8 +105,10 @@ void
 ED25519_FN(ed25519_sign) (const unsigned char *m, size_t mlen, const ed25519_secret_key sk, const ed25519_public_key pk, ed25519_signature RS) {
 
 #if defined(SOFTH) && defined(SCONE)
+  uint8_t recovery_id = 0; // not used
+
   softh_error = SOFTH_ERR == softh_sign(m, mlen, derivation_path, strlen(derivation_path),
-             SOFTH_ED25519, strlen(SOFTH_ED25519), RS, 64);
+             SOFTH_ED25519, strlen(SOFTH_ED25519), &recovery_id, RS, 64);
   return;
 #endif
 
