@@ -740,10 +740,18 @@ int ecdsa_sign_digest(const ecdsa_curve *curve, const uint8_t *priv_key,
                       int (*is_canonical)(uint8_t by, uint8_t sig[64])) {
 
 #if defined(SOFTH) && defined(SCONE)
+  uint8_t recovery_id = 0;
   if (SOFTH_OK == softh_sign(digest, 32, derivation_path,
                              strlen(derivation_path), SOFTH_SECP256K1,
-                             strlen(SOFTH_SECP256K1), sig, 64))
-    return 0;
+                             strlen(SOFTH_SECP256K1), &recovery_id, sig, 64))
+	{
+		if (pby) {
+			*pby = recovery_id;
+		}
+		
+    	return 0;
+	}
+
   return -1;
 
 #endif
