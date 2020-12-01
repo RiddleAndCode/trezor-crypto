@@ -19,7 +19,7 @@
 
 #include "ed25519-hash-custom.h"
 
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
 #include "softh.h"
 #endif
 
@@ -104,7 +104,7 @@ ED25519_FN(ed25519_cosi_sign) (const unsigned char *m, size_t mlen, const ed2551
 void
 ED25519_FN(ed25519_sign) (const unsigned char *m, size_t mlen, const ed25519_secret_key sk, const ed25519_public_key pk, ed25519_signature RS) {
 
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
   uint8_t recovery_id = 0; // not used
 
   softh_error = SOFTH_ERR == softh_sign(m, mlen, derivation_path, strlen(derivation_path),

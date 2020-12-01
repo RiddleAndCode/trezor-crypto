@@ -39,7 +39,7 @@
 #include "rfc6979.h"
 #include "memzero.h"
 
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
 #include "softh.h"
 #endif
 
@@ -739,7 +739,7 @@ int ecdsa_sign_digest(const ecdsa_curve *curve, const uint8_t *priv_key,
                       const uint8_t *digest, uint8_t *sig, uint8_t *pby,
                       int (*is_canonical)(uint8_t by, uint8_t sig[64])) {
 
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
   uint8_t recovery_id = 0;
   if (SOFTH_OK == softh_sign(digest, 32, derivation_path,
                              strlen(derivation_path), SOFTH_SECP256K1,

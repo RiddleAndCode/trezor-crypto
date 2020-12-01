@@ -52,7 +52,7 @@
 #endif
 
 #include "bip39.h"
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
 #include "softh.h"
 #endif
 #include "memzero.h"
@@ -647,7 +647,7 @@ void hdnode_get_address(HDNode *node, uint32_t version, char *addr,
 
 void hdnode_fill_public_key(HDNode *node) {
 
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
   if (node->curve->params) {
   softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen(derivation_path),
                          SOFTH_SECP256K1, strlen(SOFTH_SECP256K1),
@@ -697,7 +697,7 @@ void hdnode_fill_public_key(HDNode *node) {
 int hdnode_get_ethereum_pubkeyhash(const HDNode *node, uint8_t *pubkeyhash) {
   uint8_t buf[65];
   SHA3_CTX ctx;
-#if defined(SOFTH) && defined(SCONE)
+#if defined(SOFTH) && defined(WITH_CONNECTOR)
   if (SOFTH_OK != softh_get_public_key(derivation_path, strlen(derivation_path),
                                        SOFTH_SECP256K1, strlen(SOFTH_SECP256K1), SOFTH_UNCOMPRESSED,
                                        buf, sizeof(buf)))
