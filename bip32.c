@@ -649,12 +649,12 @@ void hdnode_fill_public_key(HDNode *node) {
 
 #if defined(SOFTH) && defined(WITH_CONNECTOR)
   if (node->curve->params) {
-  softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen(derivation_path),
-                         SOFTH_SECP256K1, strlen(SOFTH_SECP256K1),
+  softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen((char *)derivation_path),
+                         (const uint8_t *)SOFTH_SECP256K1, strlen(SOFTH_SECP256K1),
                          SOFTH_COMPRESSED, node->public_key, 33);
   } else {
-  softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen(derivation_path),
-                         SOFTH_ED25519, strlen(SOFTH_ED25519),
+  softh_error = SOFTH_ERR == softh_get_public_key(derivation_path, strlen((char *)derivation_path),
+                         (const uint8_t *)SOFTH_ED25519, strlen(SOFTH_ED25519),
                          SOFTH_COMPRESSED, node->public_key, 33);
   }
   return;
@@ -698,8 +698,9 @@ int hdnode_get_ethereum_pubkeyhash(const HDNode *node, uint8_t *pubkeyhash) {
   uint8_t buf[65];
   SHA3_CTX ctx;
 #if defined(SOFTH) && defined(WITH_CONNECTOR)
-  if (SOFTH_OK != softh_get_public_key(derivation_path, strlen(derivation_path),
-                                       SOFTH_SECP256K1, strlen(SOFTH_SECP256K1), SOFTH_UNCOMPRESSED,
+  ((void) node);
+  if (SOFTH_OK != softh_get_public_key(derivation_path, strlen((char *)derivation_path),
+                                       (const uint8_t *)SOFTH_SECP256K1, strlen(SOFTH_SECP256K1), SOFTH_UNCOMPRESSED,
                                        buf, sizeof(buf)))
     return 0;
 #else
