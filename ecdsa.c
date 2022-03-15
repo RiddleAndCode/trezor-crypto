@@ -743,7 +743,7 @@ int ecdsa_sign_digest(const ecdsa_curve *curve, const uint8_t *priv_key,
   uint8_t recovery_id = 0;
   if (SOFTH_OK == softh_sign(digest, 32, derivation_path,
                              strlen((char *)derivation_path), (const uint8_t *)SOFTH_SECP256K1,
-                             strlen(SOFTH_SECP256K1), &recovery_id, sig, 64))
+                             strlen(SOFTH_SECP256K1), NULL, 0, &recovery_id, sig, 64))
 	{
 		if (pby) {
 			*pby = recovery_id;
