@@ -108,7 +108,7 @@ ED25519_FN(ed25519_sign) (const unsigned char *m, size_t mlen, const ed25519_sec
   uint8_t recovery_id = 0; // not used
 
   softh_error = SOFTH_ERR == softh_sign(m, mlen, derivation_path, strlen((char *)derivation_path),
-             (const uint8_t *)SOFTH_ED25519, strlen(SOFTH_ED25519), &recovery_id, RS, 64);
+             (const uint8_t *)SOFTH_ED25519, strlen(SOFTH_ED25519), NULL, 0, &recovery_id, RS, 64);
   return;
 #endif
 
